@@ -1,0 +1,1805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nivesh AI — Crafting Extraordinary Digital Spaces</title>
+  <meta name="description" content="Nivesh AI Solutions transforms restaurants, hotels, bars, and cafés with world-class digital experiences — cinematic, intelligent, and breathtaking." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── DESIGN TOKENS ────────────────────────────── */
+    :root {
+      --black:       #0a0a0a;
+      --black-soft:  #111111;
+      --black-card:  #161616;
+      --gold:        #c9a84c;
+      --gold-light:  #e8c97e;
+      --gold-pale:   #f5dfa0;
+      --offwhite:    #f5f0eb;
+      --offwhite-dim:#d4cfc9;
+      --text-muted:  #7a756d;
+      --text-dim:    #4a4540;
+      --border:      rgba(201,168,76,0.12);
+      --border-hover:rgba(201,168,76,0.3);
+    }
+
+    /* ─── RESET & BASE ──────────────────────────────── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--black);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--black);
+      color: var(--offwhite);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Cormorant Garamond', serif;
+    }
+
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-track { background: var(--black); }
+    ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+    ::selection { background: rgba(201,168,76,0.25); color: var(--offwhite); }
+
+    /* ─── NAVBAR ──────────────────────────────────────── */
+    #navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      padding: 28px 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: padding 0.5s cubic-bezier(.22,1,.36,1),
+                  background 0.5s cubic-bezier(.22,1,.36,1),
+                  backdrop-filter 0.5s cubic-bezier(.22,1,.36,1);
+    }
+
+    #navbar.scrolled {
+      padding: 16px 60px;
+      background: rgba(10,10,10,0.92);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      color: var(--offwhite);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-logo .logo-dot {
+      width: 6px; height: 6px;
+      background: var(--gold);
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 400;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--offwhite-dim);
+      text-decoration: none;
+      transition: color 0.3s ease;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0;
+      width: 0; height: 1px;
+      background: var(--gold);
+      transition: width 0.4s cubic-bezier(.22,1,.36,1);
+    }
+
+    .nav-links a:hover { color: var(--offwhite); }
+    .nav-links a:hover::after { width: 100%; }
+
+    .nav-cta {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold) !important;
+      border: 1px solid var(--gold) !important;
+      padding: 8px 22px !important;
+      transition: background 0.3s ease, color 0.3s ease !important;
+    }
+
+    .nav-cta::after { display: none !important; }
+
+    .nav-cta:hover {
+      background: var(--gold) !important;
+      color: var(--black) !important;
+    }
+
+    /* ─── HERO — CANVAS SCROLL SCRUBBER ─────────────── */
+    #hero-wrapper {
+      position: relative;
+      /* height = viewport × frame count factor; controls scroll duration */
+      height: 600vh;
+    }
+
+    #hero-sticky {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #hero-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Dark vignettes over canvas */
+    .hero-vignette {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .hero-vignette-top {
+      background: linear-gradient(to bottom,
+        rgba(10,10,10,0.7) 0%,
+        rgba(10,10,10,0.3) 15%,
+        transparent 40%
+      );
+    }
+
+    .hero-vignette-bottom {
+      background: linear-gradient(to top,
+        rgba(10,10,10,0.95) 0%,
+        rgba(10,10,10,0.5) 20%,
+        transparent 50%
+      );
+    }
+
+    .hero-vignette-sides {
+      background: radial-gradient(ellipse 80% 80% at 50% 50%,
+        transparent 50%,
+        rgba(10,10,10,0.6) 100%
+      );
+    }
+
+    /* Hero content */
+    #hero-content {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      z-index: 10;
+      padding: 0 24px;
+      transition: opacity 0.6s ease;
+    }
+
+    .hero-eyebrow {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 400;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 28px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 1.2s cubic-bezier(.22,1,.36,1) 0.4s forwards;
+    }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.5rem, 8vw, 7.5rem);
+      font-weight: 300;
+      line-height: 0.95;
+      letter-spacing: -0.01em;
+      color: var(--offwhite);
+      margin-bottom: 36px;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeUp 1.4s cubic-bezier(.22,1,.36,1) 0.65s forwards;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--gold-light);
+    }
+
+    .hero-subtitle {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 300;
+      letter-spacing: 0.1em;
+      color: rgba(245,240,235,0.55);
+      max-width: 440px;
+      line-height: 1.9;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeUp 1.2s cubic-bezier(.22,1,.36,1) 0.9s forwards;
+    }
+
+    /* Scroll indicator */
+    #scroll-indicator {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      z-index: 10;
+      opacity: 0;
+      animation: fadeIn 1.2s ease 1.6s forwards;
+    }
+
+    .scroll-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 50px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+
+    /* Loading overlay for frames */
+    #frame-loader {
+      position: absolute;
+      inset: 0;
+      background: var(--black);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+      transition: opacity 0.8s ease;
+      text-align: center;
+      padding: 40px;
+    }
+
+    .loader-bar-wrap {
+      width: 200px;
+      height: 1px;
+      background: rgba(201,168,76,0.15);
+      margin-top: 20px;
+      overflow: hidden;
+    }
+
+    .loader-bar-fill {
+      height: 100%;
+      background: var(--gold);
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    .loader-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      font-weight: 300;
+      letter-spacing: 0.3em;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+
+    .loader-pct {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: var(--text-muted);
+      margin-top: 10px;
+    }
+
+    /* Error state shown if frames can't load */
+    #loader-error {
+      display: none;
+      max-width: 580px;
+      margin-top: 40px;
+      text-align: left;
+    }
+
+    #loader-error h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 400;
+      color: var(--gold-light);
+      margin-bottom: 16px;
+      letter-spacing: 0.05em;
+    }
+
+    #loader-error p {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 300;
+      color: var(--text-muted);
+      line-height: 2;
+      margin-bottom: 16px;
+    }
+
+    #loader-error code {
+      display: block;
+      font-family: 'Courier New', monospace;
+      font-size: 0.82rem;
+      color: var(--gold);
+      background: rgba(201,168,76,0.06);
+      border: 1px solid var(--border);
+      padding: 14px 20px;
+      letter-spacing: 0.03em;
+      margin: 12px 0;
+    }
+
+    #loader-error .skip-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 20px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--black);
+      background: var(--gold);
+      border: none;
+      padding: 12px 28px;
+      cursor: pointer;
+    }
+
+    /* ─── SECTION 2 — INDUSTRY SHOWCASE ──────────────── */
+    #industries {
+      position: relative;
+      background: var(--black);
+      padding: 140px 60px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    /* Decorative gold line top */
+    #industries::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 60px; right: 60px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+
+    .industries-left {
+      opacity: 0;
+      transform: translateX(-60px);
+      transition: opacity 1s cubic-bezier(.22,1,.36,1),
+                  transform 1s cubic-bezier(.22,1,.36,1);
+    }
+
+    .industries-left.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .section-eyebrow {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.62rem;
+      font-weight: 400;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .section-eyebrow::before {
+      content: '';
+      width: 30px; height: 1px;
+      background: var(--gold);
+      display: inline-block;
+    }
+
+    .industries-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3rem, 5vw, 5.5rem);
+      font-weight: 300;
+      line-height: 1.0;
+      letter-spacing: -0.01em;
+      color: var(--offwhite);
+      margin-bottom: 32px;
+    }
+
+    .industries-title em {
+      font-style: italic;
+      color: var(--gold-light);
+    }
+
+    .industries-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 300;
+      line-height: 2;
+      color: var(--text-muted);
+      max-width: 460px;
+      margin-bottom: 48px;
+    }
+
+    .industries-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .industry-tag {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem;
+      font-weight: 400;
+      font-style: italic;
+      color: var(--gold-light);
+      border: 1px solid var(--border);
+      padding: 8px 20px;
+      letter-spacing: 0.04em;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s ease, color 0.3s ease;
+      cursor: default;
+    }
+
+    .industry-tag::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(201,168,76,0.08), transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .industry-tag:hover {
+      border-color: var(--border-hover);
+      color: var(--gold-pale);
+    }
+
+    .industry-tag:hover::before { opacity: 1; }
+
+    /* Right column - video */
+    .industries-right {
+      opacity: 0;
+      transform: translateX(60px);
+      transition: opacity 1.2s cubic-bezier(.22,1,.36,1) 0.2s,
+                  transform 1.2s cubic-bezier(.22,1,.36,1) 0.2s;
+      position: relative;
+    }
+
+    .industries-right.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .video-wrap {
+      position: relative;
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow:
+        0 0 0 1px var(--border),
+        0 40px 100px rgba(0,0,0,0.7),
+        0 0 80px rgba(201,168,76,0.06);
+    }
+
+    .video-wrap video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      aspect-ratio: 16/10;
+    }
+
+    /* Gold corner accents */
+    .video-wrap::before, .video-wrap::after {
+      content: '';
+      position: absolute;
+      width: 28px; height: 28px;
+      border-color: var(--gold);
+      border-style: solid;
+      z-index: 2;
+    }
+
+    .video-wrap::before {
+      top: -1px; left: -1px;
+      border-width: 2px 0 0 2px;
+    }
+
+    .video-wrap::after {
+      bottom: -1px; right: -1px;
+      border-width: 0 2px 2px 0;
+    }
+
+    /* ─── SECTION 3 — SERVICES ────────────────────────── */
+    #services {
+      position: relative;
+      background: var(--black-soft);
+      padding: 140px 60px;
+      overflow: hidden;
+    }
+
+    #services::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 60px; right: 60px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+
+    .services-header {
+      text-align: center;
+      margin-bottom: 80px;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 1s ease, transform 1s ease;
+    }
+
+    .services-header.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .services-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.8rem, 5vw, 5rem);
+      font-weight: 300;
+      line-height: 1.05;
+      color: var(--offwhite);
+      margin-bottom: 20px;
+    }
+
+    .services-title em { font-style: italic; color: var(--gold-light); }
+
+    .services-desc {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 300;
+      color: var(--text-muted);
+      max-width: 500px;
+      margin: 0 auto;
+      line-height: 2;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+
+    .service-card {
+      padding: 52px 44px;
+      background: var(--black-card);
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+      cursor: default;
+      transition: border-color 0.4s ease;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s cubic-bezier(.22,1,.36,1),
+                  transform 0.8s cubic-bezier(.22,1,.36,1),
+                  border-color 0.4s ease;
+    }
+
+    .service-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .service-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(201,168,76,0.05) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .service-card:hover { border-color: var(--border-hover); }
+    .service-card:hover::before { opacity: 1; }
+
+    .service-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 4.5rem;
+      font-weight: 300;
+      color: rgba(201,168,76,0.07);
+      line-height: 1;
+      margin-bottom: 28px;
+      font-style: italic;
+    }
+
+    .service-icon {
+      width: 40px; height: 40px;
+      margin-bottom: 28px;
+      color: var(--gold);
+    }
+
+    .service-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 400;
+      color: var(--offwhite);
+      margin-bottom: 16px;
+      letter-spacing: 0.01em;
+    }
+
+    .service-text {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 300;
+      color: var(--text-muted);
+      line-height: 1.9;
+    }
+
+    .service-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 28px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      text-decoration: none;
+      transition: gap 0.3s ease;
+    }
+
+    .service-link:hover { gap: 14px; }
+
+    /* ─── SECTION 4 — ABOUT / PHILOSOPHY ─────────────── */
+    #about {
+      position: relative;
+      background: var(--black);
+      padding: 140px 60px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 100px;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    #about::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 60px; right: 60px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+
+    .about-left {
+      opacity: 0;
+      transform: translateY(50px);
+      transition: opacity 1s cubic-bezier(.22,1,.36,1),
+                  transform 1s cubic-bezier(.22,1,.36,1);
+    }
+
+    .about-left.visible { opacity: 1; transform: translateY(0); }
+
+    .about-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.8rem, 4.5vw, 5rem);
+      font-weight: 300;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+      color: var(--offwhite);
+      margin-bottom: 36px;
+    }
+
+    .about-title em { font-style: italic; color: var(--gold-light); }
+
+    .about-body {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 300;
+      color: var(--text-muted);
+      line-height: 2.1;
+      margin-bottom: 48px;
+    }
+
+    .about-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    .about-stat {
+      border-left: 1px solid var(--border);
+      padding-left: 20px;
+    }
+
+    .about-stat-value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3rem;
+      font-weight: 300;
+      color: var(--gold-light);
+      line-height: 1;
+      margin-bottom: 6px;
+      font-style: italic;
+    }
+
+    .about-stat-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.62rem;
+      font-weight: 400;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    .about-right {
+      opacity: 0;
+      transform: translateX(60px);
+      transition: opacity 1.2s cubic-bezier(.22,1,.36,1) 0.3s,
+                  transform 1.2s cubic-bezier(.22,1,.36,1) 0.3s;
+    }
+
+    .about-right.visible { opacity: 1; transform: translateX(0); }
+
+    .about-image-wrap {
+      position: relative;
+      aspect-ratio: 3/4;
+      background: var(--black-card);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .about-image-placeholder {
+      width: 100%;
+      height: 100%;
+      background:
+        linear-gradient(135deg, rgba(201,168,76,0.04) 0%, transparent 60%),
+        linear-gradient(225deg, rgba(201,168,76,0.03) 0%, transparent 60%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .about-image-placeholder svg {
+      width: 60px;
+      height: 60px;
+      opacity: 0.12;
+      color: var(--gold);
+    }
+
+    /* Gold corner accents */
+    .about-image-wrap::before, .about-image-wrap::after {
+      content: '';
+      position: absolute;
+      width: 28px; height: 28px;
+      border-color: var(--gold);
+      border-style: solid;
+      z-index: 2;
+    }
+
+    .about-image-wrap::before {
+      top: -1px; left: -1px;
+      border-width: 2px 0 0 2px;
+    }
+
+    .about-image-wrap::after {
+      bottom: -1px; right: -1px;
+      border-width: 0 2px 2px 0;
+    }
+
+    /* Floating text block */
+    .about-quote {
+      position: absolute;
+      bottom: 40px; left: -40px;
+      background: var(--black);
+      border: 1px solid var(--border);
+      padding: 28px 32px;
+      max-width: 280px;
+      z-index: 5;
+    }
+
+    .about-quote p {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 400;
+      font-style: italic;
+      color: var(--offwhite-dim);
+      line-height: 1.6;
+    }
+
+    .about-quote cite {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.62rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-top: 12px;
+      display: block;
+      font-style: normal;
+    }
+
+    /* ─── SECTION 5 — CONTACT CTA ────────────────────── */
+    #contact {
+      position: relative;
+      background: var(--black-soft);
+      padding: 160px 60px;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    #contact::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 60px; right: 60px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+
+    /* Ambient glow */
+    #contact::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px; height: 400px;
+      background: radial-gradient(ellipse, rgba(201,168,76,0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .contact-eyebrow {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.62rem;
+      font-weight: 400;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 1s ease, transform 1s ease;
+    }
+
+    .contact-eyebrow.visible { opacity: 1; transform: translateY(0); }
+
+    .contact-eyebrow::before, .contact-eyebrow::after {
+      content: '';
+      width: 40px; height: 1px;
+      background: var(--gold);
+      display: inline-block;
+    }
+
+    .contact-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.5rem, 7vw, 7rem);
+      font-weight: 300;
+      line-height: 0.95;
+      color: var(--offwhite);
+      margin-bottom: 32px;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 1s ease 0.15s, transform 1s ease 0.15s;
+    }
+
+    .contact-title.visible { opacity: 1; transform: translateY(0); }
+    .contact-title em { font-style: italic; color: var(--gold-light); }
+
+    .contact-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 300;
+      color: var(--text-muted);
+      line-height: 2;
+      max-width: 420px;
+      margin: 0 auto 52px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 1s ease 0.3s, transform 1s ease 0.3s;
+    }
+
+    .contact-sub.visible { opacity: 1; transform: translateY(0); }
+
+    .contact-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--black);
+      background: var(--gold);
+      border: none;
+      padding: 18px 48px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.3s ease, transform 0.3s ease,
+                  box-shadow 0.3s ease;
+      position: relative;
+      z-index: 1;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 1s ease 0.45s, transform 1s ease 0.45s,
+                  background 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .contact-btn.visible { opacity: 1; transform: translateY(0); }
+
+    .contact-btn:hover {
+      background: var(--gold-light);
+      box-shadow: 0 20px 60px rgba(201,168,76,0.2);
+    }
+
+    .contact-btn svg { width: 14px; height: 14px; }
+
+    /* ─── FOOTER ──────────────────────────────────────── */
+    footer {
+      background: var(--black);
+      border-top: 1px solid var(--border);
+      padding: 60px;
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 40px;
+      align-items: end;
+    }
+
+    .footer-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      color: var(--offwhite);
+    }
+
+    .footer-brand small {
+      display: block;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-top: 6px;
+      font-style: normal;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .footer-links a {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .footer-links a:hover { color: var(--gold); }
+
+    .footer-copy {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.62rem;
+      letter-spacing: 0.12em;
+      color: var(--text-dim);
+    }
+
+    /* ─── KEYFRAMES ────────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(var(--ty, 30px)); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    @keyframes scrollPulse {
+      0%, 100% { transform: scaleY(1); transform-origin: top; opacity: 1; }
+      50% { transform: scaleY(0.5); transform-origin: top; opacity: 0.4; }
+    }
+
+    /* ─── RESPONSIVE ──────────────────────────────────── */
+    @media (max-width: 1024px) {
+      #industries, #about {
+        grid-template-columns: 1fr;
+        gap: 60px;
+        padding: 100px 40px;
+      }
+
+      .services-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      #services { padding: 100px 40px; }
+
+      footer {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .about-quote {
+        position: static;
+        margin-top: 24px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      #navbar { padding: 20px 24px; }
+      #navbar.scrolled { padding: 14px 24px; }
+
+      .nav-links { display: none; }
+
+      .hero-title { font-size: clamp(2.8rem, 12vw, 5rem); }
+
+      .services-grid { grid-template-columns: 1fr; }
+
+      #industries, #services, #about, #contact {
+        padding: 80px 24px;
+      }
+
+      footer { padding: 40px 24px; }
+    }
+
+    /* Hamburger for mobile */
+    #nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    #nav-hamburger span {
+      width: 24px; height: 1px;
+      background: var(--offwhite);
+      display: block;
+      transition: 0.3s ease;
+    }
+
+    @media (max-width: 768px) {
+      #nav-hamburger { display: flex; }
+    }
+
+    /* Luxury thin line decorative divider */
+    .gold-divider {
+      width: 40px; height: 1px;
+      background: var(--gold);
+      margin: 0 auto 28px;
+    }
+
+    /* Noise grain overlay */
+    .grain-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.018;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+      background-size: 160px 160px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─ Grain Overlay ─ -->
+<div class="grain-overlay" aria-hidden="true"></div>
+
+<!-- ─────────────────────────────────────────────────── -->
+<!--  NAVBAR                                             -->
+<!-- ─────────────────────────────────────────────────── -->
+<nav id="navbar" role="navigation" aria-label="Primary navigation">
+  <a href="#" class="nav-logo" id="nav-brand">
+    <span class="logo-dot"></span>
+    Nivesh AI
+  </a>
+
+  <ul class="nav-links" role="list">
+    <li><a href="#hero-wrapper">Home</a></li>
+    <li><a href="#industries">Spaces</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact" class="nav-cta">Begin</a></li>
+  </ul>
+
+  <div id="nav-hamburger" aria-label="Toggle menu" role="button" tabindex="0">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+
+<!-- ─────────────────────────────────────────────────── -->
+<!--  HERO — SCROLL-DRIVEN FRAME ANIMATION              -->
+<!-- ─────────────────────────────────────────────────── -->
+<section id="hero-wrapper" aria-label="Hero section">
+  <div id="hero-sticky">
+
+    <!-- Canvas for frame scrubbing -->
+    <canvas id="hero-canvas" aria-hidden="true"></canvas>
+
+    <!-- Vignettes -->
+    <div class="hero-vignette hero-vignette-top" aria-hidden="true"></div>
+    <div class="hero-vignette hero-vignette-bottom" aria-hidden="true"></div>
+    <div class="hero-vignette hero-vignette-sides" aria-hidden="true"></div>
+
+    <!-- Frame loading overlay -->
+    <div id="frame-loader" aria-live="polite">
+      <p class="loader-text" id="loader-label">Loading</p>
+      <div class="loader-bar-wrap">
+        <div class="loader-bar-fill" id="loader-fill"></div>
+      </div>
+      <p class="loader-pct" id="loader-pct">0%</p>
+
+      <!-- Shown only if Chrome blocks local file access -->
+      <div id="loader-error">
+        <h3>One quick step to enable the animation</h3>
+        <p>
+          Chrome blocks local file access for security. To load the cinematic
+          scroll animation, run a local server from your <strong style="color:var(--offwhite-dim)">Downloads</strong> folder:
+        </p>
+        <code>cd C:\Users\NIVIP\Downloads</code>
+        <code>python -m http.server 8080</code>
+        <p>Then open in your browser:</p>
+        <code>http://localhost:8080/Nivesh%20Ai%20solutions/luxury-studio.html</code>
+        <p style="font-size:0.7rem;color:var(--text-dim);margin-top:8px;">
+          The rest of the site (all sections below) works perfectly right now — only the scroll animation needs the server.
+        </p>
+        <button class="skip-btn" onclick="skipFrameLoader()">Continue Without Animation &rarr;</button>
+      </div>
+    </div>
+
+    <!-- Hero Text Content -->
+    <div id="hero-content">
+      <p class="hero-eyebrow">Interior Design & Digital Presence</p>
+
+      <h1 class="hero-title">
+        Crafting<br />
+        <em>Extraordinary</em><br />
+        Spaces
+      </h1>
+
+      <p class="hero-subtitle">
+        We transform how the world experiences your restaurant,
+        hotel, bar, or café — through cinematic design and intelligent technology.
+      </p>
+    </div>
+
+    <!-- Scroll Indicator -->
+    <div id="scroll-indicator" aria-hidden="true">
+      <span class="scroll-label">Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ─────────────────────────────────────────────────── -->
+<!--  SECTION 2 — INDUSTRY SHOWCASE                     -->
+<!-- ─────────────────────────────────────────────────── -->
+<section id="industries" aria-label="Industries we serve">
+
+  <div class="industries-left" id="industries-left">
+    <p class="section-eyebrow">Our Expertise</p>
+
+    <h2 class="industries-title">
+      Spaces We<br /><em>Transform</em>
+    </h2>
+
+    <p class="industries-desc">
+      From intimate dining rooms to grand hotel lobbies — we understand the
+      language of atmosphere. Every pixel, every frame, every interaction is
+      designed to reflect the soul of your space.
+    </p>
+
+    <div class="industries-tags">
+      <span class="industry-tag">Restaurants</span>
+      <span class="industry-tag">Hotels</span>
+      <span class="industry-tag">Bars & Cafés</span>
+      <span class="industry-tag">Medical Clinics</span>
+      <span class="industry-tag">Architecture & Real Estate</span>
+      <span class="industry-tag">Gyms & Salons</span>
+    </div>
+  </div>
+
+  <div class="industries-right" id="industries-right">
+    <div class="video-wrap">
+      <video
+        id="showcase-video"
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="auto"
+        aria-label="Showcase video of premium hospitality spaces"
+      >
+        <!-- Replace this src with your own mp4 -->
+        <source src="./app/public/glass.mp4" type="video/mp4" />
+      </video>
+    </div>
+  </div>
+
+</section>
+
+
+<!-- ─────────────────────────────────────────────────── -->
+<!--  SECTION 3 — SERVICES                              -->
+<!-- ─────────────────────────────────────────────────── -->
+<section id="services" aria-label="Our services">
+
+  <div class="services-header" id="services-header">
+    <p class="section-eyebrow" style="justify-content:center;">What We Do</p>
+    <h2 class="services-title">
+      Tailored <em>Digital</em><br />Craftsmanship
+    </h2>
+    <p class="services-desc">
+      Every service is architected with obsessive attention to detail — because
+      you deserve nothing less than extraordinary.
+    </p>
+  </div>
+
+  <div class="services-grid" id="services-grid">
+
+    <div class="service-card" data-delay="0">
+      <div class="service-number">01</div>
+      <h3 class="service-name">Cinematic Websites</h3>
+      <p class="service-text">
+        Full-screen video backgrounds, scroll-driven animations, and editorial
+        layouts that instantly communicate luxury and character.
+      </p>
+      <a href="#contact" class="service-link">
+        Explore
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 8h10M9 4l4 4-4 4"/>
+        </svg>
+      </a>
+    </div>
+
+    <div class="service-card" data-delay="1">
+      <div class="service-number">02</div>
+      <h3 class="service-name">Brand Identity</h3>
+      <p class="service-text">
+        Custom typography, refined color systems, and cohesive visual language
+        that elevates your brand above the ordinary.
+      </p>
+      <a href="#contact" class="service-link">
+        Explore
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 8h10M9 4l4 4-4 4"/>
+        </svg>
+      </a>
+    </div>
+
+    <div class="service-card" data-delay="2">
+      <div class="service-number">03</div>
+      <h3 class="service-name">AI Integrations</h3>
+      <p class="service-text">
+        Intelligent reservation systems, personalized guest experiences, and
+        data-driven insights — powered by cutting-edge AI.
+      </p>
+      <a href="#contact" class="service-link">
+        Explore
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 8h10M9 4l4 4-4 4"/>
+        </svg>
+      </a>
+    </div>
+
+    <div class="service-card" data-delay="3">
+      <div class="service-number">04</div>
+      <h3 class="service-name">Menu Design</h3>
+      <p class="service-text">
+        Digital menus and ordering systems that are as beautiful as your food —
+        designed to increase average spend and delight guests.
+      </p>
+      <a href="#contact" class="service-link">
+        Explore
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 8h10M9 4l4 4-4 4"/>
+        </svg>
+      </a>
+    </div>
+
+    <div class="service-card" data-delay="4">
+      <div class="service-number">05</div>
+      <h3 class="service-name">Social Presence</h3>
+      <p class="service-text">
+        Scroll-stopping content strategy, photography direction, and social
+        campaigns that grow your audience and fill your seats.
+      </p>
+      <a href="#contact" class="service-link">
+        Explore
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 8h10M9 4l4 4-4 4"/>
+        </svg>
+      </a>
+    </div>
+
+    <div class="service-card" data-delay="5">
+      <div class="service-number">06</div>
+      <h3 class="service-name">Booking Systems</h3>
+      <p class="service-text">
+        Seamless, conversion-optimized reservation flows built to reduce
+        no-shows, capture leads, and communicate your brand voice.
+      </p>
+      <a href="#contact" class="service-link">
+        Explore
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 8h10M9 4l4 4-4 4"/>
+        </svg>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ─────────────────────────────────────────────────── -->
+<!--  SECTION 4 — ABOUT / PHILOSOPHY                    -->
+<!-- ─────────────────────────────────────────────────── -->
+<section id="about" aria-label="About Nivesh AI">
+
+  <div class="about-left" id="about-left">
+    <p class="section-eyebrow">Our Philosophy</p>
+
+    <h2 class="about-title">
+      Excellence<br />in Every<br /><em>Detail</em>
+    </h2>
+
+    <p class="about-body">
+      At Nivesh AI, we believe the digital face of your establishment is as
+      important as its physical design. Every animation, every typographic
+      choice, every user interaction is crafted with the same obsessive care
+      that goes into curating a Michelin-starred menu or a five-star suite.
+      <br /><br />
+      We work exclusively with hospitality brands who refuse to settle — those
+      who understand that exceptional experiences begin online, long before a
+      guest walks through the door.
+    </p>
+
+    <div class="about-stats">
+      <div class="about-stat">
+        <div class="about-stat-value">50+</div>
+        <div class="about-stat-label">Projects Delivered</div>
+      </div>
+      <div class="about-stat">
+        <div class="about-stat-value">5★</div>
+        <div class="about-stat-label">Average Rating</div>
+      </div>
+      <div class="about-stat">
+        <div class="about-stat-value">3x</div>
+        <div class="about-stat-label">Average ROI</div>
+      </div>
+      <div class="about-stat">
+        <div class="about-stat-value">12+</div>
+        <div class="about-stat-label">Cities Served</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="about-right" id="about-right">
+    <div class="about-image-wrap">
+      <div class="about-image-placeholder">
+        <svg viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="0.8" aria-hidden="true">
+          <rect x="8" y="8" width="44" height="44" rx="1"/>
+          <path d="M8 36 L22 22 L32 32 L42 24 L52 36"/>
+          <circle cx="18" cy="20" r="4"/>
+        </svg>
+      </div>
+
+      <!-- Floating quote box -->
+      <div class="about-quote">
+        <p>"Design is not just what it looks like — it's how it makes people feel before they arrive."</p>
+        <cite>— Nivesh AI Studio</cite>
+      </div>
+
+    </div>
+  </div>
+
+</section>
+
+
+<!-- ─────────────────────────────────────────────────── -->
+<!--  SECTION 5 — CONTACT CTA                           -->
+<!-- ─────────────────────────────────────────────────── -->
+<section id="contact" aria-label="Contact section">
+  <p class="contact-eyebrow" id="contact-eyebrow">Start Your Journey</p>
+
+  <h2 class="contact-title" id="contact-title">
+    Let's Build<br />Something<br /><em>Remarkable</em>
+  </h2>
+
+  <p class="contact-sub" id="contact-sub">
+    Share your vision with us. We'll craft a digital experience that matches
+    the ambition of your space.
+  </p>
+
+  <a href="mailto:hello@niveshai.com" class="contact-btn" id="contact-btn">
+    Begin the Conversation
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 8h10M9 4l4 4-4 4"/>
+    </svg>
+  </a>
+</section>
+
+
+<!-- ─────────────────────────────────────────────────── -->
+<!--  FOOTER                                             -->
+<!-- ─────────────────────────────────────────────────── -->
+<footer aria-label="Site footer">
+  <div class="footer-brand">
+    Nivesh AI Solutions
+    <small>Crafting extraordinary digital spaces</small>
+  </div>
+
+  <ul class="footer-links">
+    <li><a href="#industries">Spaces</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+
+  <p class="footer-copy">&copy; 2025 Nivesh AI Solutions</p>
+</footer>
+
+
+<!-- ─────────────────────────────────────────────────── -->
+<!--  JAVASCRIPT                                         -->
+<!-- ─────────────────────────────────────────────────── -->
+<script>
+'use strict';
+
+/* ── CONFIG ───────────────────────────────────────── */
+const FRAME_COUNT   = 160;
+const FRAME_PREFIX  = 'ezgif-frame-';
+const FRAME_EXT     = '.jpg';
+
+/*
+ * HOW TO LOAD FRAMES:
+ */
+const _isHTTP = location.protocol.startsWith('http');
+const FRAME_DIR = _isHTTP
+  ? './app/public/media/'
+  : 'file:///C:/Users/NIVIP/Downloads/Nivesh Ai solutions/app/public/media/';
+
+/* Pad number to 3 digits */
+const pad3 = n => String(n).padStart(3, '0');
+
+/* Build frame URL */
+const frameUrl = i => `${FRAME_DIR}${FRAME_PREFIX}${pad3(i)}${FRAME_EXT}`;
+
+/* Skip animation and hide loader */
+function skipFrameLoader() {
+  const loader = document.getElementById('frame-loader');
+  if (loader) {
+    loader.style.opacity = '0';
+    setTimeout(() => { loader.style.display = 'none'; }, 500);
+  }
+  // Draw a dark fallback on canvas
+  const canvas = document.getElementById('hero-canvas');
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#0f0e0c';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
+}
+
+
+/* ── NAVBAR SCROLL BEHAVIOUR ───────────────────────── */
+const navbar = document.getElementById('navbar');
+
+function updateNavbar() {
+  if (window.scrollY > 60) {
+    navbar.classList.add('scrolled');
+  } else {
+    navbar.classList.remove('scrolled');
+  }
+}
+
+window.addEventListener('scroll', updateNavbar, { passive: true });
+updateNavbar();
+
+
+/* ── CANVAS FRAME SCRUBBER ─────────────────────────── */
+(function initFrameScrubber() {
+  const canvas      = document.getElementById('hero-canvas');
+  const ctx         = canvas.getContext('2d');
+  const heroWrapper = document.getElementById('hero-wrapper');
+  const loader      = document.getElementById('frame-loader');
+  const loaderFill  = document.getElementById('loader-fill');
+  const loaderPct   = document.getElementById('loader-pct');
+  const heroContent = document.getElementById('hero-content');
+  const scrollInd   = document.getElementById('scroll-indicator');
+
+  let frames        = new Array(FRAME_COUNT).fill(null);
+  let currentFrame  = 0;
+  let loadedCount   = 0;
+  let rafId         = null;
+  let firstFrameReady = false;
+
+  /* Resize canvas to viewport */
+  function resizeCanvas() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+    if (frames[currentFrame]) drawFrame(currentFrame);
+  }
+
+  window.addEventListener('resize', resizeCanvas, { passive: true });
+  resizeCanvas();
+
+
+  function drawFrame(index) {
+    const img = frames[index];
+    if (!img || !img.complete || img.naturalWidth === 0) return;
+
+    const cw = canvas.width,  ch = canvas.height;
+    const iw = img.naturalWidth, ih = img.naturalHeight;
+    const scale = Math.max(cw / iw, ch / ih);
+    const sw    = iw * scale, sh  = ih * scale;
+    const sx    = (cw - sw) / 2,   sy  = (ch - sh) / 2;
+
+    ctx.clearRect(0, 0, cw, ch);
+    ctx.drawImage(img, sx, sy, sw, sh);
+  }
+
+
+  /* Scroll → frame index */
+  function updateFrameOnScroll() {
+    if (!firstFrameReady) return;
+
+    const rect     = heroWrapper.getBoundingClientRect();
+    const wrapH    = heroWrapper.offsetHeight - window.innerHeight;
+    const scrolled = -rect.top;
+    const progress = Math.max(0, Math.min(1, scrolled / wrapH));
+    const targetFrame = Math.min(
+      FRAME_COUNT - 1,
+      Math.floor(progress * FRAME_COUNT)
+    );
+
+    if (targetFrame !== currentFrame) {
+      currentFrame = targetFrame;
+      
+      // Fallback: if the exact frame isn't loaded yet, try to find the closest one that is
+      let frameToDraw = currentFrame;
+      if (!frames[frameToDraw]) {
+        for (let j = currentFrame; j >= 0; j--) {
+          if (frames[j]) { frameToDraw = j; break; }
+        }
+      }
+      
+      if (frames[frameToDraw]) {
+        if (rafId) cancelAnimationFrame(rafId);
+        rafId = requestAnimationFrame(() => drawFrame(frameToDraw));
+      }
+    }
+
+    /* Fade out hero text as animation progresses */
+    if (heroContent) {
+      const fadeStart = 0.05, fadeEnd = 0.35;
+      const opacity = progress < fadeStart ? 1
+                    : progress > fadeEnd   ? 0
+                    : 1 - (progress - fadeStart) / (fadeEnd - fadeStart);
+      heroContent.style.opacity = opacity;
+    }
+
+    /* Hide scroll indicator once user starts scrolling */
+    if (scrollInd && scrolled > 40) {
+      scrollInd.style.opacity = Math.max(0, 1 - scrolled / 150);
+    }
+  }
+
+  window.addEventListener('scroll', updateFrameOnScroll, { passive: true });
+
+
+  /* Pre-load all frames */
+  function loadFrames() {
+    for (let i = 0; i < FRAME_COUNT; i++) {
+      const img = new Image();
+
+      img.onload = () => {
+        frames[i] = img;
+        loadedCount++;
+
+        /* Show first frame ASAP */
+        if (i === 0 && !firstFrameReady) {
+          firstFrameReady = true;
+          drawFrame(0);
+          /* Fade out loader */
+          setTimeout(() => {
+            loader.style.opacity = '0';
+            setTimeout(() => { loader.style.display = 'none'; }, 800);
+          }, 300);
+        }
+
+        /* Update loader bar */
+        const pct = Math.round((loadedCount / FRAME_COUNT) * 100);
+        if (loaderFill) loaderFill.style.width = pct + '%';
+        if (loaderPct)  loaderPct.textContent  = pct + '%';
+      };
+
+      img.onerror = () => {
+        loadedCount++;
+        /* Update bar */
+        const pct = Math.round((loadedCount / FRAME_COUNT) * 100);
+        if (loaderFill) loaderFill.style.width = pct + '%';
+        if (loaderPct)  loaderPct.textContent  = pct + '%';
+
+        /* Frame 0 failed — browser is blocking file access. Show help UI. */
+        if (i === 0 && !firstFrameReady) {
+          firstFrameReady = true; /* prevent re-trigger */
+
+          /* Draw dark fallback on canvas so it's not blank */
+          ctx.fillStyle = '#0d0c0a';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+          /* Update loader text and reveal error panel */
+          const loaderLabel = document.getElementById('loader-label');
+          if (loaderLabel) loaderLabel.textContent = 'Frame Access Blocked';
+          if (loaderFill)  loaderFill.style.background = 'rgba(201,168,76,0.3)';
+
+          const errPanel = document.getElementById('loader-error');
+          if (errPanel) errPanel.style.display = 'block';
+        }
+      };
+
+      img.src = frameUrl(i + 1); /* frames are 001-indexed */
+    }
+  }
+
+  loadFrames();
+})();
+
+
+/* ── INTERSECTION OBSERVER ANIMATIONS ──────────────── */
+const observerOpts = {
+  root: null,
+  rootMargin: '0px 0px -80px 0px',
+  threshold: 0.1
+};
+
+function makeObserver(callback) {
+  return new IntersectionObserver(callback, observerOpts);
+}
+
+/* Generic slide-in observer */
+const slideObserver = makeObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      slideObserver.unobserve(entry.target);
+    }
+  });
+});
+
+[
+  'industries-left',
+  'industries-right',
+  'services-header',
+  'about-left',
+  'about-right',
+  'contact-eyebrow',
+  'contact-title',
+  'contact-sub',
+  'contact-btn',
+].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) slideObserver.observe(el);
+});
+
+/* Service cards staggered */
+const cards = document.querySelectorAll('.service-card');
+const cardObserver = makeObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const delay = parseInt(entry.target.dataset.delay || '0', 10);
+      setTimeout(() => {
+        entry.target.classList.add('visible');
+      }, delay * 100);
+      cardObserver.unobserve(entry.target);
+    }
+  });
+});
+
+cards.forEach(card => cardObserver.observe(card));
+
+
+/* ── SMOOTH ANCHOR SCROLL ───────────────────────────── */
+document.querySelectorAll('a[href^="#"]').forEach(link => {
+  link.addEventListener('click', e => {
+    const href = link.getAttribute('href');
+    if (href === '#') return;
+    const target = document.querySelector(href);
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+
+
+/* ── MOBILE HAMBURGER ───────────────────────────────── */
+const hamburger = document.getElementById('nav-hamburger');
+const navLinks  = document.querySelector('.nav-links');
+
+hamburger.addEventListener('click', () => {
+  const isOpen = navLinks.style.display === 'flex';
+  navLinks.style.display       = isOpen ? 'none' : 'flex';
+  navLinks.style.flexDirection = 'column';
+  navLinks.style.position      = 'fixed';
+  navLinks.style.top           = '70px';
+  navLinks.style.right         = '24px';
+  navLinks.style.background    = 'rgba(10,10,10,0.97)';
+  navLinks.style.border        = '1px solid rgba(201,168,76,0.15)';
+  navLinks.style.padding       = '24px';
+  navLinks.style.gap           = '20px';
+  navLinks.style.zIndex        = '999';
+  navLinks.style.backdropFilter = 'blur(20px)';
+  if (isOpen) navLinks.style.display = 'none';
+});
+
+/* Close mobile nav on link click */
+navLinks.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', () => {
+    if (window.innerWidth <= 768) navLinks.style.display = 'none';
+  });
+});
+
+/* Reset nav on desktop resize */
+window.addEventListener('resize', () => {
+  if (window.innerWidth > 768) {
+    navLinks.style = '';
+  }
+}, { passive: true });
+</script>
+
+</body>
+</html>

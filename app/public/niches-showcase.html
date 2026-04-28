@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Industry Niches Showcase</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #fcfcfc;
+      --text-main: #111827;
+      --text-muted: #6b7280;
+      --border-color: #e5e7eb;
+      --accent: #3b82f6;
+      --placeholder-bg: #f3f4f6;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      padding: 100px 24px;
+      background: linear-gradient(135deg, #ffffff 0%, #f3f4f6 100%);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .hero-title {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 20px;
+      color: var(--text-main);
+    }
+
+    .hero-subtitle {
+      font-size: 1.125rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 80px 24px;
+    }
+
+    /* Grid Layout */
+    .niches-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 60px 48px;
+    }
+
+    @media (max-width: 768px) {
+      .niches-grid {
+        grid-template-columns: 1fr;
+        gap: 48px;
+        padding-top: 40px;
+      }
+    }
+
+    /* Niche Card */
+    .niche-card {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .niche-title {
+      font-size: 1.75rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      margin-bottom: 24px;
+      color: var(--text-main);
+    }
+
+    .media-placeholder {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background-color: var(--placeholder-bg);
+      border: 2px dashed #d1d5db;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      position: relative;
+      transition: border-color 0.3s ease;
+    }
+
+    .media-placeholder:hover {
+      border-color: #9ca3af;
+    }
+
+    .media-placeholder span {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #9ca3af;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .niche-desc {
+      font-size: 1rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+  </style>
+</head>
+<body>
+
+  <header class="hero">
+    <h1 class="hero-title">Industries We Transform</h1>
+    <p class="hero-subtitle">Explore our specialized solutions across tailored digital spaces, software products, and global niches.</p>
+  </header>
+
+  <main class="container">
+    <div class="niches-grid">
+      
+      <!-- 1 -->
+      <article class="niche-card">
+        <h2 class="niche-title">1. Local Business Websites</h2>
+        <div class="media-placeholder">
+          <span>[Video / Image Here]</span>
+        </div>
+        <p class="niche-desc">Elevating local footprints through SEO optimized, conversion-ready web properties designed to drive foot traffic.</p>
+      </article>
+
+      <!-- 2 -->
+      <article class="niche-card">
+        <h2 class="niche-title">2. SaaS / Micro-Tools</h2>
+        <div class="media-placeholder">
+          <span>[Video / Image Here]</span>
+        </div>
+        <p class="niche-desc">Clean, scalable architectures built for software as a service, maximizing user retention and streamline onboarding.</p>
+      </article>
+
+      <!-- 3 -->
+      <article class="niche-card">
+        <h2 class="niche-title">3. AI-Powered Tools</h2>
+        <div class="media-placeholder">
+          <span>[Video / Image Here]</span>
+        </div>
+        <p class="niche-desc">Intelligent interfaces equipped with machine learning integrations and proactive user engagement loops.</p>
+      </article>
+
+      <!-- 4 -->
+      <article class="niche-card">
+        <h2 class="niche-title">4. E-commerce Stores</h2>
+        <div class="media-placeholder">
+          <span>[Video / Image Here]</span>
+        </div>
+        <p class="niche-desc">High-performance storefronts blending beautiful product storytelling with frictionless checkout experiences.</p>
+      </article>
+
+      <!-- 5 -->
+      <article class="niche-card">
+        <h2 class="niche-title">5. Education / Online Courses</h2>
+        <div class="media-placeholder">
+          <span>[Video / Image Here]</span>
+        </div>
+        <p class="niche-desc">Immersive learning management systems focusing on student success, tracking, and content delivery.</p>
+      </article>
+
+      <!-- 6 -->
+      <article class="niche-card">
+        <h2 class="niche-title">6. Real Estate</h2>
+        <div class="media-placeholder">
+          <span>[Video / Image Here]</span>
+        </div>
+        <p class="niche-desc">Cinematic property showcases, virtual tours, and hyper-local search platforms for agencies and developers.</p>
+      </article>
+
+      <!-- 7 -->
+      <article class="niche-card">
+        <h2 class="niche-title">7. Healthcare & Clinics</h2>
+        <div class="media-placeholder">
+          <span>[Video / Image Here]</span>
+        </div>
+        <p class="niche-desc">HIPAA-compliant patient portals and accessible interfaces establishing trust and streamlining appointments.</p>
+      </article>
+
+      <!-- 8 -->
+      <article class="niche-card">
+        <h2 class="niche-title">8. Legal / Law Firms</h2>
+        <div class="media-placeholder">
+          <span>[Video / Image Here]</span>
+        </div>
+        <p class="niche-desc">Authoritative, professional digital presence focusing on partner prestige and secure client acquisition.</p>
+      </article>
+
+      <!-- 9 -->
+      <article class="niche-card">
+        <h2 class="niche-title">9. Weddings & Events</h2>
+        <div class="media-placeholder">
+          <span>[Video / Image Here]</span>
+        </div>
+        <p class="niche-desc">Emotionally resonant, highly visual web experiences capturing the magic of grand venues and intimate celebrations.</p>
+      </article>
+
+      <!-- 10 -->
+      <article class="niche-card">
+        <h2 class="niche-title">10. Restaurants & Food Delivery</h2>
+        <div class="media-placeholder">
+          <span>[Video / Image Here]</span>
+        </div>
+        <p class="niche-desc">Appetite-inducing digital menus paired with robust, direct-to-consumer online ordering and booking frameworks.</p>
+      </article>
+
+      <!-- 11 -->
+      <article class="niche-card">
+        <h2 class="niche-title">11. Job Boards</h2>
+        <div class="media-placeholder">
+          <span>[Video / Image Here]</span>
+        </div>
+        <p class="niche-desc">Faceted search engines and dynamic matching algorithms connecting elite talent to outstanding organizations.</p>
+      </article>
+
+      <!-- 12 -->
+      <article class="niche-card">
+        <h2 class="niche-title">12. Directory Websites</h2>
+        <div class="media-placeholder">
+          <span>[Video / Image Here]</span>
+        </div>
+        <p class="niche-desc">Curated databases engineered for complex data filtering, geo-location capabilities, and monetization.</p>
+      </article>
+
+      <!-- 13 -->
+      <article class="niche-card">
+        <h2 class="niche-title">13. Fitness & Wellness</h2>
+        <div class="media-placeholder">
+          <span>[Video / Image Here]</span>
+        </div>
+        <p class="niche-desc">High-energy digital platforms designed for class bookings, member management, and community building.</p>
+      </article>
+
+      <!-- 14 -->
+      <article class="niche-card">
+        <h2 class="niche-title">14. Finance & Investing</h2>
+        <div class="media-placeholder">
+          <span>[Video / Image Here]</span>
+        </div>
+        <p class="niche-desc">Secure, performance-driven web architectures presenting data cleanly and asserting uncompromising financial stability.</p>
+      </article>
+
+      <!-- 15 -->
+      <article class="niche-card">
+        <h2 class="niche-title">15. Travel & Tourism</h2>
+        <div class="media-placeholder">
+          <span>[Video / Image Here]</span>
+        </div>
+        <p class="niche-desc">Breathtaking destination guides and friction-free booking interfaces catering to luxury globetrotters.</p>
+      </article>
+
+    </div>
+  </main>
+
+</body>
+</html>
