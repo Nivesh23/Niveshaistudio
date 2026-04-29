@@ -1,0 +1,5 @@
+[[redirects]]
+  from = "/"
+  to = "/luxury-studio.html"
+  status = 200
+  force = true
