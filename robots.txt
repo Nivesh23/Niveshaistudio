@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+# Disallow non-user-facing paths
+Disallow: /.agent/
+Disallow: /seo_niches.py
+Disallow: /niches/template.html
+
+# Sitemap
+Sitemap: https://niveshaistudio.netlify.app/sitemap.xml
