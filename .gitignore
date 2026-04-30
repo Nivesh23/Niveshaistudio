@@ -18,9 +18,12 @@ dist/
 build/
 out/
 
-# Large media files (exceed GitHub 100MB limit)
-*.mp4
-*.mov
-*.avi
-*.mkv
+# Large media files > 50MB (exceed GitHub 100MB limit — use cloud CDN instead)
+app/public/hover2.mp4
 app/public/media/
+
+# These specific files are too large for GitHub (>25MB risk)
+# app/Travel and tourism.mp4   — host on Cloudinary
+# app/Finance.mp4              — host on Cloudinary
+
+# Allow all other .mp4 videos (they are under 25MB and safe for GitHub)
