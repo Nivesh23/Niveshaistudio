@@ -2683,122 +2683,70 @@
     'use strict';
 
     /* ══════════════════════════════════════════════════════
-       PREMIUM HOVER-TO-PLAY VIDEOS
+       FIRST-FRAME THUMBNAIL + HOVER-TO-PLAY
        ─────────────────────────────────────────────────────
-       ✦ Zero bytes loaded on page open
-       ✦ Hover-intent delay (80ms) — no jank on fast mouse pass
-       ✦ Shimmer skeleton while video is fetching
-       ✦ Smooth fade-in when first frame is ready
-       ✦ Play-icon overlay on idle cards
-       ✦ Pause + rewind to frame 0 on mouse leave
-       ✦ Mobile: tap to play, tap again to pause
+       ✦ On page load: videos use preload="metadata" so only
+         the first frame is decoded (~few KB each, not the
+         full video file)
+       ✦ First frame shows as a static thumbnail at rest
+       ✦ Hover: video plays smoothly from frame 0
+       ✦ Mouse leave: pauses and snaps back to frame 0
+       ✦ Mobile: tap to play / tap again to pause
+       ✦ No play icon. No overlay. Just clean video frames.
     ══════════════════════════════════════════════════════ */
-    (function premiumHoverVideos() {
+    (function firstFrameThumbnail() {
 
-      /* ── Inject CSS once ───────────────────────────── */
-      const css = `
-        .niche-media.loading {
-          background: linear-gradient(
-            90deg,
-            rgba(184,146,42,0.06) 25%,
-            rgba(184,146,42,0.15) 50%,
-            rgba(184,146,42,0.06) 75%
-          );
-          background-size: 200% 100%;
-          animation: shimmerVid 1.4s ease-in-out infinite;
-        }
-        @keyframes shimmerVid {
-          0%   { background-position: 200% 0; }
-          100% { background-position: -200% 0; }
-        }
+      /* Inject minimal CSS — video always visible (opacity:1) */
+      const styleEl = document.createElement('style');
+      styleEl.textContent = `
         .niche-media video {
-          opacity: 0;
-          transition: opacity 0.55s ease;
-        }
-        .niche-media video.vid-ready {
           opacity: 1;
         }
-        .niche-play-icon {
-          position: absolute;
-          top: 50%; left: 50%;
-          transform: translate(-50%, -50%) scale(1);
-          width: 46px; height: 46px;
-          background: rgba(184,146,42,0.88);
-          border-radius: 50%;
-          display: flex; align-items: center; justify-content: center;
-          pointer-events: none;
-          transition: opacity 0.3s ease, transform 0.35s cubic-bezier(.22,1,.36,1);
-          opacity: 0.78;
-          z-index: 4;
-          backdrop-filter: blur(6px);
-        }
-        .niche-play-icon svg { width: 18px; height: 18px; margin-left: 3px; }
-        .niche-card:hover .niche-play-icon,
-        .niche-card.vid-active .niche-play-icon {
-          opacity: 0;
-          transform: translate(-50%, -50%) scale(0.65);
-        }
       `;
-      const styleEl = document.createElement('style');
-      styleEl.textContent = css;
       document.head.appendChild(styleEl);
 
-      /* ── Setup each card ───────────────────────────── */
       function setup() {
         document.querySelectorAll('.niche-card').forEach(card => {
           const mediaBox = card.querySelector('.niche-media');
           const video    = mediaBox && mediaBox.querySelector('video[data-src]');
           if (!video) return;
 
-          /* Position for overlay */
-          mediaBox.style.position = 'relative';
+          /* Set src with preload=metadata — browser fetches only
+             the first frame, NOT the full video file            */
+          video.src        = video.dataset.src;
+          video.preload    = 'metadata';
+          video.currentTime = 0;
+          video.load();
 
-          /* Play-icon overlay */
-          const icon = document.createElement('div');
-          icon.className = 'niche-play-icon';
-          icon.innerHTML = `<svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>`;
-          mediaBox.appendChild(icon);
+          /* Once metadata is loaded, snap to first frame */
+          video.addEventListener('loadedmetadata', () => {
+            video.currentTime = 0.001; /* triggers first frame paint */
+          }, { once: true });
 
           let hoverTimer = null;
-          let loaded     = false;
 
-          function loadAndPlay() {
-            if (!loaded) {
-              mediaBox.classList.add('loading');       /* shimmer */
-              video.src = video.dataset.src;
-              video.load();
-              loaded = true;
-              video.addEventListener('canplay', () => {
-                mediaBox.classList.remove('loading');
-                video.classList.add('vid-ready');     /* fade in */
-              }, { once: true });
-            }
-            video.currentTime = 0;
-            video.play().catch(() => {});
-            card.classList.add('vid-active');
-          }
-
-          function pauseAndReset() {
-            video.pause();
-            video.currentTime = 0;
-            card.classList.remove('vid-active');
-          }
-
-          /* Desktop: hover-intent (80ms prevents jank on fast pass) */
+          /* Desktop hover — 80ms intent delay avoids jank */
           card.addEventListener('mouseenter', () => {
-            hoverTimer = setTimeout(loadAndPlay, 80);
+            hoverTimer = setTimeout(() => {
+              video.currentTime = 0;
+              video.play().catch(() => {});
+            }, 80);
           });
+
           card.addEventListener('mouseleave', () => {
             clearTimeout(hoverTimer);
-            pauseAndReset();
+            video.pause();
+            video.currentTime = 0.001; /* snap back to first frame */
           });
 
-          /* Mobile: tap toggles play / pause */
+          /* Mobile: tap to toggle */
           card.addEventListener('touchstart', () => {
-            if (!loaded || video.paused) {
-              loadAndPlay();
+            if (video.paused) {
+              video.currentTime = 0;
+              video.play().catch(() => {});
             } else {
-              pauseAndReset();
+              video.pause();
+              video.currentTime = 0.001;
             }
           }, { passive: true });
         });
